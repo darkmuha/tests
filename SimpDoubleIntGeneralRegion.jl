@@ -9,8 +9,8 @@ function CheckWhere(curr, last)
 end
 
 function SimpDoubleIntGeneralRegion(f, a, b, g1, g2, n)
-  k = h = (b - a) / n
-
+  h = (b - a) / n
+  k = (g2(b) - g1(a)) / n
   if !(n % 2 == 0)
     display("Entered odd number of iterations")
     return

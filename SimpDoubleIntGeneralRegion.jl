@@ -1,45 +1,57 @@
-function CheckWhere(curr, last)
-  if (curr == 1 || curr == last)
-    return 1
-  elseif (curr % 2 == 0)
-    return 4
-  else
-    return 2
-  end
-end
-
-function SimpDoubleIntGeneralRegion(f, a, b, g1, g2, n)
-  h = (b - a) / n
-  k = (g2(b) - g1(a)) / n
-  if !(n % 2 == 0)
+function SimpDoubleIntGeneralRegion(f, a, b, g1, g2, m, n)
+  if !(n % 2 == 0 && m % 2 == 0)
     display("Entered odd number of iterations")
     return
   end
   println("getting volume...")
 
-  n += 1
-  sum = 0
+  h = (b - a) / n
+  p1 = 0
+  p2 = 0
+  p3 = 0
 
-  for i in 1:n
-    # check where checks which iteration it is 
-    # and assigns it to this pattern 1, 4, 2, 4, 2, ... , 2, 4, 1
-    p = CheckWhere(i, n)
-    # println(p)
-    for j in 1:n
-      q = CheckWhere(j, n)
-      # println(p)
-      sum += p * q * f(g1(a) + (j - 1) * k, a + (i - 1) * h)
+  for i in 0:n
+    x = a + i * h
+    HX = (g2(x) - g1(x)) / m
+    q1 = f(x, g1(x)) + f(x, g2(x))
+    q2 = 0
+    q3 = 0
+
+    for j in 1:m-1
+      y = g1(x) + j * HX
+      Q = f(x, y)
+      if (j % 2 == 0)
+        q2 += Q
+      else
+        q3 += Q
+      end
+    end
+    L = (q1 + 2 * q2 + 4 * q3) * HX / 3
+    if (i == 0 || i == n)
+      p1 += L
+    elseif (i % 2 == 0)
+      p2 += L
+    else
+      p3 += L
     end
   end
-  Isum = h * k / 9 * sum
-  return Isum
+
+  return h * (p1 + 2 * p2 + 4 * p3) / 3
 end
 
-f = (x, y) -> 3 * x^2 + y^2
-g1 = y -> y^2 - 3
-g2 = y -> y + 3
-a = -2
-b = 3
-n = 100
-g2(b) - g1(a)
-SimpDoubleIntGeneralRegion(f, a, b, g1, g2, n)
+# f = (x, y) -> log(x * y)
+# g1 = x -> 1
+# g2 = x -> x
+# a = 1
+# b = ℯ
+# n = 8
+# m = 4
+f = (x, y) -> cos(y)
+g1 = x -> 0
+g2 = x -> x
+a = 0
+b = pi
+n = 6
+m = 6
+
+SimpDoubleIntGeneralRegion(f, a, b, g1, g2, m, n)
